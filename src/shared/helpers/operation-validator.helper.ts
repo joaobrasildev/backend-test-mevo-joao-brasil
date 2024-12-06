@@ -7,21 +7,25 @@ export function operationValidator(operations: IOperation[]) {
     let processed = [];
 
     operations.forEach((operation) => {
-        if(processed.filter((processedItem) => {
-                operation.from == processedItem.from &&
-                operation.to == processedItem.to && 
-                operation.amount == processedItem.amount
-            }).length
-        ) {
-            invalidObject.push({...operation, reason: 'duplicate'})
-        }    
-        if(operation.amount < 0) {
-            invalidObject.push({...operation, reason: 'negative'})
-            processed.push(operation)
+        const isDuplicate = processed.some(
+            (processedItem) =>
+                operation.from === processedItem.from &&
+                operation.to === processedItem.to &&
+                operation.amount === processedItem.amount
+        );
+
+        if (isDuplicate) {
+            invalidObject.push({ ...operation, reason: 'duplicate' });
+        } else if (operation.amount < 0) {
+            invalidObject.push({ ...operation, reason: 'negative' });
+        } else if(operation.amount > 50000){
+            validObject.push({...operation, suspect: true});
+            processed.push(operation);
+        } else {
+            validObject.push({...operation, suspect: false });
+            processed.push(operation);
         }
-        validObject.push(operation)
+    });
 
-    })
-
-    return { invalidObject, validObject }
+    return { invalidObject, validObject };
 }

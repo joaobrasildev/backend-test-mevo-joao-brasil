@@ -1,8 +1,10 @@
 import { PrismaService } from "@src/shared/database/prisma.service";
-import { AbstractOperationFailedHistory } from "./abstract-operation-failed-history.repository";
+import { AbstractOperationFailedHistoryRepository } from "./abstract-operation-failed-history.repository";
 import { ICreateOperationFailedHistoryRequestOperation, IOperationFailedHistoryResponse } from "@src/shared/interfaces/create-operation-failed-history.interface";
+import { Injectable } from "@nestjs/common";
 
-export class OperationFailedHistoryRepository implements AbstractOperationFailedHistory{
+@Injectable()
+export class OperationFailedHistoryRepository implements AbstractOperationFailedHistoryRepository{
     constructor(
         private readonly prismaService: PrismaService
     ){}

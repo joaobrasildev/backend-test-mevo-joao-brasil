@@ -6,7 +6,6 @@ export interface ICreateRequestOperation {
 }
 
 export interface IOperation {
-    id: number
     from:string
     to:string
     amount:number

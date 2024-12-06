@@ -1,7 +1,9 @@
 import { ICreateRequestOperation } from "@src/shared/interfaces/create-operation.interface";
 import { AbstractOperationRepository } from "./abstract-operation.repository";
 import { PrismaService } from "@src/shared/database/prisma.service";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class OperationRepository implements AbstractOperationRepository {
     constructor(
         private prismaService: PrismaService
