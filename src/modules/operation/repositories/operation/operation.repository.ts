@@ -9,14 +9,21 @@ export class OperationRepository implements AbstractOperationRepository {
         private prismaService: PrismaService
     ) {}
 
-    async createMany(object: ICreateRequestOperation[]): Promise<void> {
-        await this.prismaService.operation.createMany({
+    async create(object: ICreateRequestOperation): Promise<void> {
+        await this.prismaService.operation.create({
             data: object
         })
-    }
+    }    
+
     async getAmount(): Promise<number> {
         return await this.prismaService.operation.count({
             where: {}
+        })
+    }
+
+    async getOne(object: ICreateRequestOperation): Promise<ICreateRequestOperation> {
+        return await this.prismaService.operation.findFirst({
+            where: object
         })
     }
 }

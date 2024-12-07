@@ -25,7 +25,12 @@ export class GetResumeUseCase implements AbstractGetResumeUseCase {
         })
         const csvValidatedData = operationValidator(csvDataAmountConverted);
         if(csvValidatedData.validObject.length) {
-            await this.operationRepository.createMany(csvValidatedData.validObject);
+            for(const operation of csvValidatedData.validObject) {
+                const operationExists = await this.operationRepository.getOne(operation)
+                if(!operationExists) {
+                    await this.operationRepository.create(operation);
+                }
+            }
         }
         if(csvValidatedData.invalidObject.length) {
             await this.operationFailedHistoryRepository.createMany(csvValidatedData.invalidObject);

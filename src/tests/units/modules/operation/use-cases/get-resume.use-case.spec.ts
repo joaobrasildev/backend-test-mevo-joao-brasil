@@ -12,13 +12,16 @@ describe('GetResumeUseCase', () => {
     let operationFailedHistoryRepositoryCreateManyMock: jest.Mock;
     let operationFailedHistoryRepositoryGetAllMock: jest.Mock;
     let getResumeUseCase: GetResumeUseCase;
-    let operationRepositoryCreateManyMock: jest.Mock;
+    let operationRepositoryCreateMock: jest.Mock;
     let operationRepositoryGetAmountMock: jest.Mock;
+    let operationRepositoryGetOneMock: jest.Mock;
 
 
     beforeEach(async () => {
-        operationRepositoryCreateManyMock = jest.fn();
+        operationRepositoryCreateMock = jest.fn();
         operationRepositoryGetAmountMock = jest.fn()
+        operationRepositoryGetOneMock = jest.fn()
+
         operationFailedHistoryRepositoryCreateManyMock = jest.fn()
         operationFailedHistoryRepositoryGetAllMock = jest.fn()
 
@@ -28,8 +31,9 @@ describe('GetResumeUseCase', () => {
                 {
                     provide: AbstractOperationRepository,
                     useValue: {
-                        createMany: operationRepositoryCreateManyMock,
-                        getAmount: operationRepositoryGetAmountMock
+                        create: operationRepositoryCreateMock,
+                        getAmount: operationRepositoryGetAmountMock,
+                        getOne: operationRepositoryGetOneMock
                     },
                 },
                 {
@@ -81,7 +85,7 @@ describe('GetResumeUseCase', () => {
                     reason: 'negative'
             }])
             expect(result.resume).toEqual(operationFailedHistoryGetAllResponseMock)
-            expect(operationRepositoryCreateManyMock).toHaveBeenCalledTimes(0)
+            expect(operationRepositoryCreateMock).toHaveBeenCalledTimes(0)
 
         })
     })
@@ -94,7 +98,8 @@ describe('GetResumeUseCase', () => {
             '4276070982701;9281297941669;203611771'
         const csv = Buffer.from(csvData);
 
-        operationRepositoryCreateManyMock.mockReturnValue(undefined)
+        operationRepositoryCreateMock.mockReturnValue(undefined)
+        operationRepositoryGetOneMock.mockReturnValue(undefined)
         operationRepositoryGetAmountMock.mockReturnValue(1)
         operationFailedHistoryRepositoryGetAllMock.mockReturnValue([])
 
@@ -103,13 +108,14 @@ describe('GetResumeUseCase', () => {
 
         expect(result).toHaveProperty('validAmount')
         expect(result).toHaveProperty('resume')
-        expect(operationRepositoryCreateManyMock).toHaveBeenCalledTimes(1)
-        expect(operationRepositoryCreateManyMock).toHaveBeenCalledWith([{
+        expect(operationRepositoryCreateMock).toHaveBeenCalledTimes(1)
+        expect(operationRepositoryGetOneMock).toHaveBeenCalledTimes(1)
+        expect(operationRepositoryCreateMock).toHaveBeenCalledWith({
                 from: '4276070982701',
                 to: '9281297941669',
                 amount: 203611771 /100,
                 suspect: true
-        }])
+        })
         expect(result.resume).toEqual([])
         expect(operationFailedHistoryRepositoryCreateManyMock).toHaveBeenCalledTimes(0)
 

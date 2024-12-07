@@ -7,11 +7,11 @@ describe('OperationRepository', () => {
     let operationRepository: OperationRepository;
     let prismaService: PrismaService;
     let prismaServiceCountMock: jest.Mock;
-    let prismaServiceCreateManyMock: jest.Mock;
+    let prismaServiceCreateMock: jest.Mock;
 
     beforeEach(async () => {
         prismaServiceCountMock = jest.fn();
-        prismaServiceCreateManyMock = jest.fn();
+        prismaServiceCreateMock = jest.fn();
 
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -21,7 +21,7 @@ describe('OperationRepository', () => {
                     useValue: {
                         operation: {
                             count: prismaServiceCountMock,
-                            createMany: prismaServiceCreateManyMock
+                            create: prismaServiceCreateMock
                         }
                     },
                 },
@@ -37,38 +37,21 @@ describe('OperationRepository', () => {
         expect(prismaService).toBeDefined();
     });
 
-    describe('createMany', () => {
-        it(`GIVING createMany
-             WHEN is valid array param
+    describe('create', () => {
+        it(`GIVING create
+             WHEN is valid param
              THEN should be create data`,
             async () => {
-                const operationMock = [
-                    operationMockGenerate(),
-                    operationMockGenerate()
-                ]
-                const result = await operationRepository.createMany(operationMock);
+                const operationMock = operationMockGenerate()
+                const result = await operationRepository.create(operationMock);
 
-                expect(prismaServiceCreateManyMock).toHaveBeenCalledTimes(1);
-                expect(prismaServiceCreateManyMock).toHaveBeenCalledWith({
+                expect(prismaServiceCreateMock).toHaveBeenCalledTimes(1);
+                expect(prismaServiceCreateMock).toHaveBeenCalledWith({
                     data: operationMock
                 });
                 expect(result).toEqual(undefined)
             }
         )
-        it(`GIVING createMany
-            WHEN is invalid array param
-            THEN should be not fail`,
-           async () => {
-               const operationMock = []
-               const result = await operationRepository.createMany(operationMock);
-
-               expect(prismaServiceCreateManyMock).toHaveBeenCalledTimes(1);
-               expect(prismaServiceCreateManyMock).toHaveBeenCalledWith({
-                   data: operationMock
-               });
-               expect(result).toEqual(undefined)
-           }
-       )        
     })
 
     describe('count', () => {
