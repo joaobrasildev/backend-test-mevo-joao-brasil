@@ -8,7 +8,7 @@ export function csvParserHelper(buffer: Buffer): Record<string, any>[] {
     });
 
     if (result.errors.length > 0) {
-      throw new Error(`Erro ao processar o CSV: ${result.errors[0].message}`);
+      throw new Error(`Erro ao processar o CSV!`);
     }
 
     return result.data;

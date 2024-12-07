@@ -28,7 +28,8 @@ describe('OperationValidatorHelper', () => {
         expect(data?.validObject).toEqual([{
             to: '1232',
             from: '123928',
-            amount: 21983
+            amount: 21983,
+            suspect: false
         }])
 
     });
